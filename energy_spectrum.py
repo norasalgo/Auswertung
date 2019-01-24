@@ -1,28 +1,35 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy as sp
-import scipy.special.erfc as erfc
-
+from math import erfc as erfc
+import scipy.optimize
 # ---Load Data ---------------
 
 path_data = './data_notext'
 
-data = np.loadtxt(path_data + '/Al_time_20min.spe')
+y_data = np.loadtxt(path_data + '/Al_time_20min.spe')
+y_data = np.array(y_data)
+x_data = np.arange(len(y_data))
+sigma_i = np.sqrt(y_data)
+
+# ------fitshit-----
 
 
-# ------Fitshit-----
+def gaussian(x, mu, sig):
+    return 1 / (np.sqrt(2*np.pi) * sig) * np.exp(-1 / 2 * ((x - mu) / sig) ** 2)
 
 
-def gaussian(x,mu, sigma):
-    return 1/(np.sqrt(2*np.pi)*sigma)*np.exp(-1/2*((x-mu)/sigma)**2)
+def ex_gaussian(x, mu, sig, lam):
+    return lam / 2 * np.exp(lam / 2 * (2 * mu + lam * sig ** 2 - 2 * x)) * erfc(
+        (mu + lam * sig ** 2 - x) / (np.sqrt(2) * sig))
 
 
-def ex_gaussian(x, mu, sigma, lam):
-    return lam / 2 * np.exp(lam / 2 * (2 * mu + lam * sigma ** 2 - 2 * x)) * erfc(
-        (mu + lam * sigma ** 2 - x) / (np.sqrt(2) * sigma))
+def f_al (x, a, b, mu, sig):
+    return a * b*gaussian(x, mu, sig)
+
+def chi2():
+    pass
+
+y_fit, cov = scipy.optimize.curve_fit(f=f_al,xdata=x_data,ydata=y_data)
 
 
-x = range(len(data))
-plt.scatter(x, data)
-plt.show()
-print(data[20:40])
+#plotshit------------
