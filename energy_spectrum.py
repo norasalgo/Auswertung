@@ -35,13 +35,14 @@ def f_al (x, *params):
 
 fit_params, cov = scipy.optimize.curve_fit(f=f_al,xdata=x_data,ydata=y_data, p0=(1,1,1900,10))
 # a_fit, b_fit, mu_fit, sig_fit = fit_params
-y_fit = f_al(x_data,*fit_params)
+x_fit = np.linspace(start=x_data[0],stop=x_data[-1], num=10*len(x_data))
+y_fit = f_al(x_fit,*fit_params)
 print(fit_params)
 
 #plotshit------------
 fig = plt.figure()
 ax = plt.subplot(111)
 ax.scatter(x_data,y_data, marker = '.')
-ax.scatter(x_data, y_fit,marker = ".")
+ax.plot(x_fit, y_fit, 'r', linewidth = 1)
 fig.savefig('al_time_fit.png', dpi = 300)
 plt.show()
