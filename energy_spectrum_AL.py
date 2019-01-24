@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import erfc as erfc
 import scipy.optimize
+
 # ---Load Data ---------------
 
 path_data = './data_notext'
@@ -12,37 +13,34 @@ x_data = np.arange(len(y_data))[1000:]
 y_data = y_data[1000:]
 sigma_i = np.sqrt(y_data)
 
+
 # ------fitshit-----
 
 
 def gaussian(x, mu, sig):
-    return 1 / (np.sqrt(2*np.pi) * sig) * np.exp(-1 / 2 * ((x - mu) / sig) ** 2)
+    return 1 / (np.sqrt(2 * np.pi) * sig) * np.exp(-1 / 2 * ((x - mu) / sig) ** 2)
 
 
 def ex_gaussian(x, mu, sig, lam):
     return lam / 2 * np.exp(lam / 2 * (2 * mu + lam * sig ** 2 - 2 * x)) * erfc(
         (mu + lam * sig ** 2 - x) / (np.sqrt(2) * sig))
 
-#
-# def f_al (x, a, b, mu, sig):
-#     return a * b*gaussian(x, mu, sig)
 
-def f_al (x, *params):
+def f_al(x, *params):
     a, b, mu, sig = params
-    return a * b*gaussian(x, mu, sig)
+    return a * b * gaussian(x, mu, sig)
 
 
-
-fit_params, cov = scipy.optimize.curve_fit(f=f_al,xdata=x_data,ydata=y_data, p0=(1,1,1900,10))
+fit_params, cov = scipy.optimize.curve_fit(f=f_al, xdata=x_data, ydata=y_data, p0=(1, 1, 1900, 10))
 # a_fit, b_fit, mu_fit, sig_fit = fit_params
-x_fit = np.linspace(start=x_data[0],stop=x_data[-1], num=10*len(x_data))
-y_fit = f_al(x_fit,*fit_params)
+x_fit = np.linspace(start=x_data[0], stop=x_data[-1], num=10 * len(x_data))
+y_fit = f_al(x_fit, *fit_params)
 print(fit_params)
 
-#plotshit------------
+# plotshit------------
 fig = plt.figure()
 ax = plt.subplot(111)
-ax.scatter(x_data[625:900],y_data[625:900], marker = '.')
-ax.plot(x_fit[6250:9000], y_fit[6250:9000], 'r', linewidth = 1)
-fig.savefig('al_time_fit.png', dpi = 300)
+ax.scatter(x_data[625:900], y_data[625:900], marker='.')
+ax.plot(x_fit[6250:9000], y_fit[6250:9000], 'r', linewidth=1)
+fig.savefig('al_time_fit.png', dpi=300)
 plt.show()
