@@ -49,13 +49,17 @@ def f_plas_t_2(x, *params):
 start_param_1 = (1, 100000, 100000, 1750, 10, 0.1)
 start_param_2 = (40, 100000, 1000000, 1000000, 1750, 10, 0.1, 0.5)
 
-fit_params_1, cov_1 = scipy.optimize.curve_fit(f=f_plas_t_1, xdata=x_data[1000:], ydata=y_data[1000:], p0=start_param_1)
+fit_params_1, cov_1 = scipy.optimize.curve_fit(f=f_plas_t_1, xdata=x_data[1000:],sigma=sigma_i[1000:], ydata=y_data[1000:], p0=start_param_1)
 a_fit, b_fit, c_fit, mu_fit, sig_fit, lam_fit = fit_params_1
-print(fit_params_1)
+err_1 = np.sqrt(np.diag(cov_1))
+print('params1=', fit_params_1)
+print('err1=', err_1)
 
-fit_params_2, cov_2 = scipy.optimize.curve_fit(f=f_plas_t_2, xdata=x_data[1000:], ydata=y_data[1000:], p0=start_param_2)
+fit_params_2, cov_2 = scipy.optimize.curve_fit(f=f_plas_t_2, xdata=x_data[1000:], ydata=y_data[1000:], p0=start_param_2, sigma=sigma_i[1000:])
 a_fit_2, b_fit_2, c_fit_2, d_fit_2, mu_fit_2, sig_fit_2, lam_1_fit_2, lam_2_fit_2 = fit_params_2
-print(fit_params_2)
+err_2 =  np.sqrt(np.diag(cov_2))
+print('params_2=',fit_params_2)
+print('err2=', err_2)
 tau_1 = 1/(lam_1_fit_2*alpha)
 tau_2 = 1/(lam_2_fit_2*alpha)
 print(tau_1,tau_2)
@@ -96,3 +100,4 @@ print(tau_1,tau_2)
 # ax_2.legend(loc=1)
 # plt.show()
 # fig.savefig('plastic_time_fit_both.png', dpi=600)
+
