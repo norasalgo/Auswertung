@@ -11,8 +11,12 @@ y_data = np.loadtxt(path_data + '/Al_time_20min.spe')
 y_data = np.array(y_data)
 x_data = np.arange(len(y_data))[1000:]
 y_data = y_data[1000:]
-sigma_i = np.sqrt(y_data)
-
+sigma_i = []
+for y_i in y_data:
+    if y_i == 0:
+        sigma_i.append(1)
+    else:
+        sigma_i.append(np.sqrt(y_i))
 
 # ------fitshit-----
 
@@ -36,6 +40,7 @@ fit_params, cov = scipy.optimize.curve_fit(f=f_al, xdata=x_data, ydata=y_data, p
 x_fit = np.linspace(start=x_data[0], stop=x_data[-1], num=10 * len(x_data))
 y_fit = f_al(x_fit, *fit_params)
 print(fit_params)
+
 
 # plotshit------------
 fig = plt.figure()
